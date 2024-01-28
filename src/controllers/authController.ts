@@ -1,8 +1,6 @@
 import { Request, Response } from "express";
 import { register, login } from "../services/authService";
-import jwt from "jsonwebtoken";
-
-const JWT_SECRET = process.env.JWT_SECRET || "mysecret";
+import generateToken from "../helper/jwtHelper";
 
 export const registerUser = async (req: Request, res: Response) => {
     const { name, email, password } = req.body;
@@ -17,20 +15,13 @@ export const registerUser = async (req: Request, res: Response) => {
     }
     try {
         const user = await register(name, email, password);
-        jwt.sign(
-            { email: user.email, userId: user.userId, name: user.name },
-            JWT_SECRET,
-            { expiresIn: "30d" },
-            (error, token) => {
-                if (error) {
-                    throw error;
-                }
-                return res.status(201).json({
-                    data: { token: token },
-                    error: null,
-                });
-            }
-        );
+        const token = generateToken(user);
+        if (token) {
+            return res.status(201).json({
+                data: { token: token },
+                error: null,
+            });
+        }
     } catch (error) {
         return res
             .status(500)
@@ -51,20 +42,13 @@ export const loginUser = async (req: Request, res: Response) => {
     }
     try {
         const user = await login(email, password);
-        jwt.sign(
-            { email: user.email, userId: user.userId, name: user.name },
-            JWT_SECRET,
-            { expiresIn: "30d" },
-            (error, token) => {
-                if (error) {
-                    throw error;
-                }
-                return res.status(201).json({
-                    data: { token: token },
-                    error: null,
-                });
-            }
-        );
+        const token = generateToken(user);
+        if (token) {
+            return res.status(201).json({
+                data: { token: token },
+                error: null,
+            });
+        }
     } catch (error) {
         return res
             .status(500)
