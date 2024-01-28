@@ -1,13 +1,16 @@
 import "reflect-metadata";
-import express, { Express, Request, Response } from "express";
+import express, { Express } from "express";
 import * as dotenv from "dotenv";
 dotenv.config();
 import dataSource from "./db/postgres.config";
+import authRouter from "./routers/authRouter";
 
 const app: Express = express();
 
 const port = process.env.PORT;
 const database = process.env.POSTGRES_DATABASE || "";
+
+app.use(express.json());
 
 dataSource
     .initialize()
@@ -18,9 +21,7 @@ dataSource
         console.error("Error during Data Source initialization", err);
     });
 
-app.get("/", (req: Request, res: Response) => {
-    res.send("Hello, world!");
-});
+app.use("/api/auth", authRouter);
 
 app.listen(port, () => {
     console.log(`Server is running on Port:${port}`);
