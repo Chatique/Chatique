@@ -18,7 +18,7 @@ export const registerUser = async (req: Request, res: Response) => {
     try {
         const user = await register(username, email, password);
         jwt.sign(
-            { email: user.email, id: user.id, name: user.username },
+            { email: user.email, userId: user.userId, name: user.username },
             JWT_SECRET,
             { expiresIn: "30d" },
             (error, token) => {
@@ -52,7 +52,7 @@ export const loginUser = async (req: Request, res: Response) => {
     try {
         const user = await login(email, password);
         jwt.sign(
-            { email: user.email, id: user.id, name: user.username },
+            { email: user.email, userId: user.userId, name: user.username },
             JWT_SECRET,
             { expiresIn: "30d" },
             (error, token) => {

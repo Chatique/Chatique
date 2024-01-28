@@ -8,8 +8,8 @@ import {
 
 @Entity()
 export class User {
-    @PrimaryGeneratedColumn("uuid")
-    id: string;
+    @PrimaryGeneratedColumn("uuid", { name: "user_id" })
+    userId: string;
 
     @Column({ type: "varchar", length: 50, unique: true })
     username: string;
@@ -20,9 +20,9 @@ export class User {
     @Column()
     password: string;
 
-    @CreateDateColumn({ type: "timestamp with time zone" })
-    created_at: Date;
+    @CreateDateColumn({ name: "created_at", type: "timestamp with time zone" })
+    createdAt: Date;
 
-    @UpdateDateColumn({ type: "timestamp with time zone" })
-    updated_at: Date;
+    @UpdateDateColumn({ name: "updated_at", type: "timestamp with time zone" })
+    updatedAt: Date;
 }
