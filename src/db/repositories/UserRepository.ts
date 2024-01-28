@@ -7,11 +7,6 @@ export const saveUser = async (user: User) => {
     return await userRepo.save(user);
 };
 
-export const isCredentialTaken = async (username: string, email: string) => {
-    return await userRepo.findOne({
-        where: [{ username: username }, { email: email }],
-    });
-};
 export const findByEmail = async (email: string) => {
     return await userRepo.findOne({ where: { email: email } });
 };

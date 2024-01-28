@@ -5,8 +5,8 @@ import jwt from "jsonwebtoken";
 const JWT_SECRET = process.env.JWT_SECRET || "mysecret";
 
 export const registerUser = async (req: Request, res: Response) => {
-    const { username, email, password } = req.body;
-    const requiredFields = ["username", "email", "password"];
+    const { name, email, password } = req.body;
+    const requiredFields = ["name", "email", "password"];
 
     for (let field of requiredFields) {
         if (!req.body[field]) {
@@ -16,9 +16,9 @@ export const registerUser = async (req: Request, res: Response) => {
         }
     }
     try {
-        const user = await register(username, email, password);
+        const user = await register(name, email, password);
         jwt.sign(
-            { email: user.email, userId: user.userId, name: user.username },
+            { email: user.email, userId: user.userId, name: user.name },
             JWT_SECRET,
             { expiresIn: "30d" },
             (error, token) => {
@@ -52,7 +52,7 @@ export const loginUser = async (req: Request, res: Response) => {
     try {
         const user = await login(email, password);
         jwt.sign(
-            { email: user.email, userId: user.userId, name: user.username },
+            { email: user.email, userId: user.userId, name: user.name },
             JWT_SECRET,
             { expiresIn: "30d" },
             (error, token) => {

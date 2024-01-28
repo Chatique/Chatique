@@ -1,21 +1,17 @@
 import { User } from "../db/entities/UserEntity";
-import {
-    findByEmail,
-    isCredentialTaken,
-    saveUser,
-} from "../db/repositories/UserRepository";
+import { findByEmail, saveUser } from "../db/repositories/UserRepository";
 import { comparePassword, hashPassword } from "../helper/passwordHelper";
 
 export const register = async (
-    username: string,
+    name: string,
     email: string,
     password: string
 ) => {
     try {
-        await validateCredentials(username, email, password);
+        await validateCredentials(name, email, password);
         password = await hashPassword(password);
         const user = new User();
-        user.username = username;
+        user.name = name;
         user.email = email;
         user.password = password;
 
@@ -41,38 +37,28 @@ export const login = async (email: string, password: string) => {
 };
 
 const validateCredentials = async (
-    username: string,
+    name: string,
     email: string,
     password: string
 ) => {
     try {
-        validateUsername(username);
+        validateName(name);
         validateEmail(email);
         validatePassword(password);
 
-        const existingUser = await isCredentialTaken(username, email);
+        const existingUser = await findByEmail(email);
         if (existingUser) {
-            if (existingUser.username === username) {
-                throw new Error("Username is taken");
-            }
-            if (existingUser.email === email) {
-                throw new Error("Email id already exists");
-            }
+            throw new Error("Email id already exists");
         }
     } catch (error) {
         throw error;
     }
 };
 
-const validateUsername = (username: string) => {
-    if (username.length < 6 || username.length > 50) {
-        throw new Error("Username name must be between 6 to 50 characters");
+const validateName = (name: string) => {
+    if (name.length < 6 || name.length > 50) {
+        throw new Error("Name must be between 6 to 50 characters");
     }
-    const usernameRegex = /^[a-z0-9_]+$/i;
-    if (!usernameRegex.test(username))
-        throw new Error(
-            "Invalid Username. Username can contain aphabets, numbers and underscore only"
-        );
 };
 
 const validateEmail = (email: string) => {
