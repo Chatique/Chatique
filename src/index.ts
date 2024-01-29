@@ -4,6 +4,7 @@ import * as dotenv from "dotenv";
 dotenv.config();
 import dataSource from "./db/postgres.config";
 import authRouter from "./routers/authRouter";
+import messageRouter from "./routers/messageRouter";
 
 const app: Express = express();
 
@@ -22,6 +23,7 @@ dataSource
     });
 
 app.use("/api/auth", authRouter);
+app.use("/api/message", messageRouter);
 
 app.listen(port, () => {
     console.log(`Server is running on Port:${port}`);

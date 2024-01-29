@@ -44,7 +44,7 @@ export const loginUser = async (req: Request, res: Response) => {
         const user = await login(email, password);
         const token = generateToken(user);
         if (token) {
-            return res.status(201).json({
+            return res.status(200).json({
                 data: { token: token },
                 error: null,
             });
