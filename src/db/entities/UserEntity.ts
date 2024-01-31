@@ -4,7 +4,9 @@ import {
     Column,
     CreateDateColumn,
     UpdateDateColumn,
+    ManyToMany,
 } from "typeorm";
+import { Chat } from "./ChatEntity";
 
 @Entity()
 export class User {
@@ -25,4 +27,7 @@ export class User {
 
     @UpdateDateColumn({ name: "updated_at", type: "timestamp with time zone" })
     updatedAt: Date;
+
+    @ManyToMany(() => Chat)
+    chats: Chat[];
 }

@@ -5,31 +5,26 @@ import {
     CreateDateColumn,
     UpdateDateColumn,
     ManyToOne,
-    JoinColumn,
 } from "typeorm";
 import { User } from "./UserEntity";
+import { Chat } from "./ChatEntity";
 
 @Entity()
 export class Message {
     @PrimaryGeneratedColumn("uuid", { name: "message_id" })
     messageId: string;
 
-    @Column({ name: "sender_id" })
-    senderId: string;
-
-    @Column({ name: "receiver_id" })
-    receiverId: string;
-
-    @ManyToOne(() => User, (user) => user.userId, { onDelete: "CASCADE" })
-    @JoinColumn({ name: "sender_id", referencedColumnName: "userId" })
-    sender: User;
-
-    @ManyToOne(() => User, (user) => user.userId, { onDelete: "CASCADE" })
-    @JoinColumn({ name: "receiver_id", referencedColumnName: "userId" })
-    receiver: User;
-
     @Column({ type: "varchar" })
     content: string;
+
+    @ManyToOne(() => User)
+    sender: User;
+
+    @ManyToOne(() => User)
+    receiver: User;
+
+    @ManyToOne(() => Chat)
+    chat: Chat;
 
     @CreateDateColumn({ name: "created_at", type: "timestamp with time zone" })
     createdAt: Date;

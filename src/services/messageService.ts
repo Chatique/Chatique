@@ -1,19 +1,40 @@
 import { Message } from "../db/entities/MessageEntity";
+import { User } from "../db/entities/UserEntity";
+import { existingChat, saveChat } from "../db/repositories/ChatRepository";
 import { saveMessage } from "../db/repositories/MessageRepository";
 import { findById } from "../db/repositories/UserRepository";
 
 export const send = async (
     content: string,
-    senderId: string,
+    sender: User,
     receiverId: string
 ) => {
-    const receiver = await findById(receiverId);
-    if (!receiver) throw new Error("Reciever is not found");
+    try {
+        const receiver = await findById(receiverId);
+        if (!receiver) {
+            throw new Error("Receiver not found");
+        }
 
-    const message = new Message();
-    message.senderId = senderId;
-    message.receiverId = receiverId;
-    message.content = content;
+        const chatUsers = [sender, receiver].sort();
 
-    return await saveMessage(message);
+        let chat;
+
+        const isChatExists = await existingChat(chatUsers);
+        if (isChatExists) chat = isChatExists;
+        else {
+            chat = await saveChat(chatUsers);
+        }
+
+        const message = new Message();
+        message.sender = sender;
+        message.receiver = receiver;
+        message.content = content;
+        message.chat = chat;
+
+        const savedMessage = await saveMessage(message);
+
+        return savedMessage;
+    } catch (error) {
+        throw error;
+    }
 };

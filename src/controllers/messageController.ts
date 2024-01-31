@@ -2,7 +2,7 @@ import { Request, Response } from "express";
 import { send } from "../services/messageService";
 
 export const sendMessage = async (request: Request, response: Response) => {
-    const { user } = request;
+    const sender = request.user;
     const { content, receiverId } = request.body;
     const requiredFields = ["content", "receiverId"];
 
@@ -13,13 +13,12 @@ export const sendMessage = async (request: Request, response: Response) => {
                 .json({ data: null, error: `Missing ${field}` });
         }
     }
-    if (!user)
+    if (!sender)
         return response
             .status(400)
             .json({ data: null, error: "Sender is not found" });
     try {
-        const senderId = user?.userId;
-        const message = await send(content, senderId, receiverId);
+        const message = await send(content, sender, receiverId);
 
         response.status(201).json({ data: message, error: null });
     } catch (error) {

@@ -1,6 +1,7 @@
 import { DataSource } from "typeorm";
 import { User } from "./entities/UserEntity";
 import { Message } from "./entities/MessageEntity";
+import { Chat } from "./entities/ChatEntity";
 
 const dataSource = new DataSource({
     type: "postgres",
@@ -12,7 +13,7 @@ const dataSource = new DataSource({
     password: process.env.POSTGRES_PASSWORD || "chatique_password",
     database: process.env.POSTGRES_DATABASE || "chatique",
     // logging: true,
-    entities: [User, Message],
+    entities: [User, Message, Chat],
     synchronize: true,
 });
 

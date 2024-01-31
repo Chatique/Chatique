@@ -10,7 +10,7 @@ export const saveUser = async (user: User) => {
 export const findById = async (userId: string) => {
     return await userRepo.findOne({
         where: { userId },
-        select: ["userId", "name"],
+        select: ["userId", "name", "email"],
     });
 };
 
@@ -28,6 +28,6 @@ export const findByUser = async (
 export const findByEmail = async (email: string) => {
     return await userRepo.findOne({
         where: { email },
-        select: ["userId", "email", "name", "createdAt", "updatedAt"],
+        select: ["userId", "email", "name"],
     });
 };
