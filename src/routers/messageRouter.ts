@@ -4,7 +4,7 @@ import authorize from "../middlewares/authMiddleware";
 
 const messageRouter = Router();
 
-messageRouter.post("/send", authorize, sendMessage);
-messageRouter.get("/get/:chatId", authorize, getMessage);
+messageRouter.post("/", authorize, sendMessage);
+messageRouter.get("/", authorize, getMessage);
 
 export default messageRouter;

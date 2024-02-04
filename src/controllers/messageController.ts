@@ -30,13 +30,18 @@ export const sendMessage = async (request: Request, response: Response) => {
 
 export const getMessage = async (request: Request, response: Response) => {
     const sender = request.user;
-    const { chatId } = request.params;
+    const { chatId } = request.query;
+
     if (!sender)
         return response
             .status(400)
             .json({ data: null, error: "Sender is not found" });
     try {
-        const message = await get(sender, chatId);
+        if (!chatId || typeof chatId != "string")
+            return response
+                .status(400)
+                .json({ data: null, error: "Invalid Chat ID" });
+        const message = await get(sender, chatId as string);
 
         response.status(201).json({ data: message, error: null });
     } catch (error) {
