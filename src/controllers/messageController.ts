@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { send } from "../services/messageService";
+import { get, send } from "../services/messageService";
 
 export const sendMessage = async (request: Request, response: Response) => {
     const sender = request.user;
@@ -19,6 +19,24 @@ export const sendMessage = async (request: Request, response: Response) => {
             .json({ data: null, error: "Sender is not found" });
     try {
         const message = await send(content, sender, receiverId);
+
+        response.status(201).json({ data: message, error: null });
+    } catch (error) {
+        response
+            .status(500)
+            .json({ data: null, error: (error as Error).message });
+    }
+};
+
+export const getMessage = async (request: Request, response: Response) => {
+    const sender = request.user;
+    const { chatId } = request.params;
+    if (!sender)
+        return response
+            .status(400)
+            .json({ data: null, error: "Sender is not found" });
+    try {
+        const message = await get(sender, chatId);
 
         response.status(201).json({ data: message, error: null });
     } catch (error) {

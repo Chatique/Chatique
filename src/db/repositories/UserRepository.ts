@@ -7,7 +7,7 @@ export const saveUser = async (user: User) => {
     return await userRepo.save(user);
 };
 
-export const findById = async (userId: string) => {
+export const findByUserId = async (userId: string) => {
     return await userRepo.findOne({
         where: { userId },
         select: ["userId", "name", "email"],
@@ -29,5 +29,12 @@ export const findByEmail = async (email: string) => {
     return await userRepo.findOne({
         where: { email },
         select: ["userId", "email", "name"],
+    });
+};
+
+export const findUserByEmail = async (email: string) => {
+    return await userRepo.findOne({
+        where: { email },
+        select: ["userId", "email", "name", "password"],
     });
 };

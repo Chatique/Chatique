@@ -1,5 +1,9 @@
 import { User } from "../db/entities/UserEntity";
-import { findByEmail, saveUser } from "../db/repositories/UserRepository";
+import {
+    findByEmail,
+    findUserByEmail,
+    saveUser,
+} from "../db/repositories/UserRepository";
 import { comparePassword, hashPassword } from "../helper/passwordHelper";
 
 export const register = async (
@@ -23,7 +27,7 @@ export const register = async (
 export const login = async (email: string, password: string) => {
     try {
         validateEmail(email);
-        const user = await findByEmail(email);
+        const user = await findUserByEmail(email);
 
         if (!user) throw new Error("Email id not found");
 

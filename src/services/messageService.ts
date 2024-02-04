@@ -1,8 +1,12 @@
 import { Message } from "../db/entities/MessageEntity";
 import { User } from "../db/entities/UserEntity";
-import { existingChat, saveChat } from "../db/repositories/ChatRepository";
-import { saveMessage } from "../db/repositories/MessageRepository";
-import { findById } from "../db/repositories/UserRepository";
+import {
+    existingChat,
+    findByChatId,
+    saveChat,
+} from "../db/repositories/ChatRepository";
+import { findByChat, saveMessage } from "../db/repositories/MessageRepository";
+import { findByUserId } from "../db/repositories/UserRepository";
 
 export const send = async (
     content: string,
@@ -10,7 +14,7 @@ export const send = async (
     receiverId: string
 ) => {
     try {
-        const receiver = await findById(receiverId);
+        const receiver = await findByUserId(receiverId);
         if (!receiver) {
             throw new Error("Receiver not found");
         }
@@ -34,6 +38,25 @@ export const send = async (
         const savedMessage = await saveMessage(message);
 
         return savedMessage;
+    } catch (error) {
+        throw error;
+    }
+};
+
+export const get = async (sender: User, chatId: string) => {
+    try {
+        const chat = await findByChatId(chatId);
+        if (!chat) {
+            throw new Error("Chat not found");
+        }
+
+        const messages = await findByChat(chat);
+        const formattedMessages = messages.map((message) => ({
+            ...message,
+            chatId: message.chat.chatId,
+            chat: undefined,
+        }));
+        return formattedMessages;
     } catch (error) {
         throw error;
     }
